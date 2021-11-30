@@ -1,0 +1,102 @@
+
+@function color-diff($a, $b) {
+    $sat: saturation($a) - saturation($b);
+    $lig: lightness($a) - lightness($b);
+    $fn-sat: if($sat > 0, 'desaturate', 'saturate');
+    $fn-lig: if($lig > 0, 'darken', 'lighten');
+  
+    @return (
+      adjust-hue: -(hue($a) - hue($b)),
+      #{$fn-sat}: abs($sat),
+      #{$fn-lig}: abs($lig)
+    );
+  }
+
+
+@function palette-diff($palette) {
+    $base: map-get($palette, 'base');
+    $colors: map-get($palette, 'colors');
+    $diffs: ();
+  
+    @each $color in $colors {
+      $diffs: append($diffs, color-diff($base, $color));
+    }
+  
+    @return $diffs;
+}
+
+
+@function apply-diff($color, $diff) {
+    @each $function, $value in $diff {
+      $color: call($function, $color, $value);
+    }
+  
+    @return $color;
+}
+
+
+@function create-palette($base-color) {
+    $palette: ();
+  
+    @each $diff in $palette-diff {
+      $palette: append($palette, apply-diff($base-color, $diff));
+    }
+  
+    @return $palette;
+}
+
+
+@function palette($base-color) {
+    $colors: create-palette($base-color);
+    $keys: 'lighter' 'light' 'base' 'dark' 'darker';
+    $palette: ();
+  
+    @for $i from 1 through min(length($colors), length($keys)) {
+      $palette: map-merge($palette, (nth($keys, $i): nth($colors, $i)));
+    }
+  
+    @return $palette;
+  }
+
+
+
+  
+  @function lighter($palette) {
+    @if not map-has-key($palette, 'lighter') {
+      @warn "`#{inspect($palette)}` doesn't seem to have a key named `lighter`.";
+    }
+  
+    @return map-get($palette, 'lighter');
+  }
+  
+  @function light($palette) {
+    @if not map-has-key($palette, 'light') {
+      @warn "`#{inspect($palette)}` doesn't seem to have a key named `light`.";
+    }
+  
+    @return map-get($palette, 'light');
+  }
+
+  @function base($palette) {
+    @if not map-has-key($palette, 'base') {
+      @warn "`#{inspect($palette)}` doesn't seem to have a key named `base`.";
+    }
+  
+    @return map-get($palette, 'base');
+  }
+
+  @function dark($palette) {
+    @if not map-has-key($palette, 'dark') {
+      @warn "`#{inspect($palette)}` doesn't seem to have a key named `dark`.";
+    }
+  
+    @return map-get($palette, 'dark');
+  }
+
+  @function darker($palette) {
+    @if not map-has-key($palette, 'darker') {
+      @warn "`#{inspect($palette)}` doesn't seem to have a key named `darker`.";
+    }
+  
+    @return map-get($palette, 'darker');
+  }
