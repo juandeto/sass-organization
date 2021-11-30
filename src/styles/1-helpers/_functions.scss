@@ -100,3 +100,18 @@
   
     @return map-get($palette, 'darker');
   }
+
+
+
+
+
+
+// you can use it like this:
+
+// .foo {
+//   color: red;
+
+//   @include respond-to('medium') {
+//     color: blue;
+//   }
+// }

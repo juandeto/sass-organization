@@ -20,31 +20,13 @@ $empty-back: linear-gradient(to top, rgb(93,184,112) 0%,rgb(140, 214, 156) 100%)
 
 
 
-
-@mixin centerContent{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-@mixin buttonStyle{
-    display: flex;
-    align-items: center;
-    color: $soft-text;
-    border: none;
-    background: none;
-    padding: 8px 0px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    svg{
-        margin: 0 8px;
-    }
-    @media (min-width: 400px) {
-        font-size: 1rem;
-        padding: 8px 12px;
-    }
-}
-
+$breakpoints: (
+  'tiny': (min-width: 200px),
+  'smaller': (min-width: 400px),
+  'small': (min-width: 600px),
+  'medium': (min-width: 800px),
+  'large': (min-width: 1000px),
+  'huge': (min-width: 1200px),
+);
 
 
